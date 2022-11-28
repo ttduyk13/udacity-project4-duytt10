@@ -1,4 +1,4 @@
-org: duytt10
+org: ttduyk13
 app: duytt10-serverless-todo-app
 service: duytt10-serverless-todo-app
 
@@ -45,13 +45,13 @@ provider:
             - xray:PutTraceSegments
           Resource: '*'
   
-  custom:
+custom:
   documentation:
     api:
       info:
         version: v1.0.0
         title: Todo API
-        description: Serverless application for todo 
+        description: Serverless application for todo
     models:
       - name: CreateTodoRequest
         contentType: application/json
@@ -72,6 +72,7 @@ functions:
           path: todos
           cors: true
           authorizer: Auth
+          reqValidatorName: RequestBodyValidator
     iamRoleStatements:
       - Effect: Allow
         Action:
@@ -101,7 +102,7 @@ functions:
     iamRoleStatements:
       - Effect: Allow
         Action:
-          - dynamodb: PutItem
+          - dynamodb:PutItem
         Resource: !GetAtt TodosTable.Arn
 
   UpdateTodo:
@@ -121,12 +122,10 @@ functions:
     iamRoleStatements:
       - Effect: Allow
         Action:
-          - dynamodb: UpdateItem
-          - dynamodb: GetItem
+          - dynamodb:UpdateItem
+          - dynamodb:GetItem
         Resource: !GetAtt TodosTable.Arn
 
-  # TODO: Configure this function
-  # Provide property for setting up CORS, Authorizer, iamRoleStatements
   DeleteTodo:
     handler: src/lambda/http/deleteTodo.handler
     events:
@@ -135,15 +134,14 @@ functions:
           path: todos/{todoId}
           cors: true
           authorizer: Auth
+          reqValidatorName: RequestBodyValidator
     iamRoleStatements:
       - Effect: Allow
         Action:
-          - dynamodb: DeleteItem
-          - dynamodb: GetItem
+          - dynamodb:DeleteItem
+          - dynamodb:GetItem
         Resource: !GetAtt TodosTable.Arn
 
-  # TODO: Configure this function
-  # Provide property for setting up CORS, Authorizer, iamRoleStatements
   GenerateUploadUrl:
     handler: src/lambda/http/generateUploadUrl.handler
     events:
@@ -152,11 +150,12 @@ functions:
           path: todos/{todoId}/attachment
           cors: true
           authorizer: Auth
+          reqValidatorName: RequestBodyValidator
     iamRoleStatements:
       - Effect: Allow
         Action:
-          - s3: PutObject
-          - s3: GetObject
+          - s3:PutObject
+          - s3:GetObject
         Resource: !GetAtt TodosTable.Arn
 
 resources:
