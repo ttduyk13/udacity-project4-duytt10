@@ -5,6 +5,7 @@
   "dependencies": {
     "@types/axios": "^0.14.0",
     "@types/http-errors": "^1.6.1",
+    "auth0": "^2.44.0",
     "aws-xray-sdk": "^2.2.0",
     "axios": "^0.18.0",
     "http-errors": "^1.7.2",
