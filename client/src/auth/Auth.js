@@ -33,8 +33,8 @@ export default class Auth {
   handleAuthentication() {
     this.auth0.parseHash((err, authResult) => {
       if (authResult && authResult.accessToken && authResult.idToken) {
-        console.log('Access token: ', authResult.accessToken)
-        console.log('id token: ', authResult.idToken)
+        console.log('handleAuthentication # Access token: ', authResult.accessToken)
+        console.log('handleAuthentication # id token: ', authResult.idToken)
         this.setSession(authResult);
       } else if (err) {
         this.history.replace('/');
@@ -45,14 +45,14 @@ export default class Auth {
   }
 
   getAccessToken() {
-    if (this.accessToken === null) {
+    if (this.accessToken === null || this.accessToken === undefined) {
       this.accessToken = sessionStorage.getItem("accessToken")
     }
     return this.accessToken;
   }
 
   getIdToken() {
-    if (this.idToken === null) {
+    if (this.idToken === null || this.idToken === undefined) {
       this.idToken = sessionStorage.getItem("idToken")
     }
     return this.idToken;
@@ -65,9 +65,9 @@ export default class Auth {
     // Set the time that the access token will expire at
     let expiresAt = (authResult.expiresIn * 1000) + new Date().getTime();
     this.accessToken = authResult.accessToken;
-    sessionStorage.setItem('accessToken', this.accessToken)
+    sessionStorage.setItem('accessToken', this.getAccessToken())
     this.idToken = authResult.idToken;
-    sessionStorage.setItem('idToken', this.idToken)
+    sessionStorage.setItem('idToken', this.getIdToken())
     this.expiresAt = expiresAt;
     sessionStorage.setItem('expiresAt', expiresAt.toString())
 
@@ -95,6 +95,9 @@ export default class Auth {
 
     // Remove isLoggedIn flag from localStorage
     sessionStorage.removeItem('isLoggedIn');
+    sessionStorage.removeItem('expiresAt');
+    sessionStorage.removeItem('accessToken');
+    sessionStorage.removeItem('idToken');
 
     this.auth0.logout({
       return_to: window.location.origin
@@ -108,18 +111,14 @@ export default class Auth {
     // Check whether the current time is past the
     // access token's expiry time
 
-    console.log('Access token: ', this.accessToken)
-    console.log('id token: ', this.idToken)
+    console.log('Access token: ', this.getAccessToken())
+    console.log('id token: ', this.getIdToken())
     let result;
     let expiresAt = parseInt(sessionStorage.getItem('expiresAt'));
     if (isNaN(expiresAt)) {
       result = false
     } else {
       result = new Date().getTime() < expiresAt;
-    }
-    if (!result) {
-      sessionStorage.removeItem('isLoggedIn');
-      sessionStorage.removeItem('expiresAt');
     }
     return result;
   }
