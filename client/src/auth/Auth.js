@@ -45,22 +45,31 @@ export default class Auth {
   }
 
   getAccessToken() {
+    if (this.accessToken === null) {
+      this.accessToken = sessionStorage.getItem("accessToken")
+    }
     return this.accessToken;
   }
 
   getIdToken() {
+    if (this.idToken === null) {
+      this.idToken = sessionStorage.getItem("idToken")
+    }
     return this.idToken;
   }
 
   setSession(authResult) {
     // Set isLoggedIn flag in localStorage
-    localStorage.setItem('isLoggedIn', 'true');
+    sessionStorage.setItem('isLoggedIn', 'true');
 
     // Set the time that the access token will expire at
     let expiresAt = (authResult.expiresIn * 1000) + new Date().getTime();
     this.accessToken = authResult.accessToken;
+    sessionStorage.setItem('accessToken', this.accessToken)
     this.idToken = authResult.idToken;
+    sessionStorage.setItem('idToken', this.idToken)
     this.expiresAt = expiresAt;
+    sessionStorage.setItem('expiresAt', expiresAt.toString())
 
     // navigate to the home route
     this.history.replace('/');
@@ -85,7 +94,7 @@ export default class Auth {
     this.expiresAt = 0;
 
     // Remove isLoggedIn flag from localStorage
-    localStorage.removeItem('isLoggedIn');
+    sessionStorage.removeItem('isLoggedIn');
 
     this.auth0.logout({
       return_to: window.location.origin
@@ -98,7 +107,20 @@ export default class Auth {
   isAuthenticated() {
     // Check whether the current time is past the
     // access token's expiry time
-    let expiresAt = this.expiresAt;
-    return new Date().getTime() < expiresAt;
+
+    console.log('Access token: ', this.accessToken)
+    console.log('id token: ', this.idToken)
+    let result;
+    let expiresAt = parseInt(sessionStorage.getItem('expiresAt'));
+    if (isNaN(expiresAt)) {
+      result = false
+    } else {
+      result = new Date().getTime() < expiresAt;
+    }
+    if (!result) {
+      sessionStorage.removeItem('isLoggedIn');
+      sessionStorage.removeItem('expiresAt');
+    }
+    return result;
   }
 }
