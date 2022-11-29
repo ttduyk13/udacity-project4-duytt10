@@ -1,4 +1,4 @@
-import { axios } from './utils'
+import axios from 'axios'
 import { createLogger } from '../utils/logger'
 import { JwksKey } from './JwksKey'
 import { SigningKey } from './SigningKey'
@@ -12,24 +12,20 @@ const certToPEM = (cert: string): string => {
   return pem
 }
 
-const fetchJwks = (url: string): void => {
+const fetchJwks = async (url: string): Promise<void> => {
   const options = {
     method: 'GET',
     url: url
   };
 
+  let res;
+
   if (!jwks) {
-    axios
-      .request(options)
-      .then((res) => {
-        if (res.status < 200 || res.status >= 300) {
-          logger.error(`Http Error ${res.status}`)
-        }
-        jwks = res.data.keys
-      })
-      .catch((err) => {
-        logger.error('getCert function error: ', err)
-      })
+    logger.info(`request: ${JSON.stringify(options)}`)
+    res = await axios.request(options)
+
+    logger.info('response data', res.data)
+    jwks = res.data.keys
   }
 }
 
@@ -52,11 +48,14 @@ const getSigningKeys = (): SigningKey[] => {
       return null
     }
 
+    logger.info(`signing keys: `, signingKeys)
+
     return signingKeys
   }
 }
 
 const getSigningKey = (kid: string) => {
+  logger.info(`current kid: ${kid}`)
   return getSigningKeys().find((key) => key.kid === kid).publicKey
 }
 
