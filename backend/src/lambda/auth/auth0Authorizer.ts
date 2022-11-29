@@ -51,7 +51,7 @@ export const handler = async (
 
 async function verifyToken(authHeader: string): Promise<JwtPayload> {
   const token = getToken(authHeader)
-  fetchJwks(JWKS_URI)
+  await fetchJwks(JWKS_URI)
 
   return verify(token, getSigningKey(DEFAULT_KID), {
     algorithms: ['RS256']

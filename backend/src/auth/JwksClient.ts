@@ -2,6 +2,7 @@ import axios from 'axios'
 import { createLogger } from '../utils/logger'
 import { JwksKey } from './JwksKey'
 import { SigningKey } from './SigningKey'
+import {EMPTY_STRING} from "../utils/constants";
 const logger = createLogger('jwksClient')
 
 let jwks: JwksKey[] = null
@@ -13,24 +14,20 @@ const certToPEM = (cert: string): string => {
 }
 
 const fetchJwks = async (url: string): Promise<void> => {
-  const options = {
-    method: 'GET',
-    url: url
-  };
-
   let res;
 
-  if (!jwks) {
-    logger.info(`request: ${JSON.stringify(options)}`)
-    res = await axios.request(options)
+  if (jwks === null || jwks.length === 0) {
+    logger.info(`request: ${JSON.stringify(url)}`)
+    res = await axios.get(url);
 
-    logger.info('response data', res.data)
+    logger.info('response data:', res.data)
     jwks = res.data.keys
   }
 }
 
 const getSigningKeys = (): SigningKey[] => {
-  if (jwks) {
+  logger.info("jwks:", jwks)
+  if (jwks !== null && jwks.length > 0) {
     const signingKeys: SigningKey[] = jwks
       .filter(
         (key) =>
@@ -51,11 +48,17 @@ const getSigningKeys = (): SigningKey[] => {
     logger.info(`signing keys: `, signingKeys)
 
     return signingKeys
+  } else {
+    return null;
   }
 }
 
 const getSigningKey = (kid: string) => {
   logger.info(`current kid: ${kid}`)
+  const signedKeys: SigningKey[] = getSigningKeys();
+  if (signedKeys === null) {
+    return EMPTY_STRING
+  }
   return getSigningKeys().find((key) => key.kid === kid).publicKey
 }
 

@@ -34,8 +34,7 @@ const createTodo = async (
       userId,
       todoId,
       createdAt,
-      done: false,
-      attachmentUrl: 'http://example.com/image.png'
+      done: false
     }
 
     const todo = await todosAccess.createTodo(newTodo)
@@ -84,8 +83,8 @@ const createAttachmentPresignedUrl = async (
   try {
     const url = s3Storage.getUploadUrl(todoId, userId)
     logger.info(
-      `todos # createAttachmentPresignedUrl - generate presigned url: `,
-      url
+      `todos # createAttachmentPresignedUrl - generate presigned url: ${url}`,
+
     )
     return url
   } catch (error) {

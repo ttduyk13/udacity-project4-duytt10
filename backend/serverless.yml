@@ -141,6 +141,10 @@ functions:
           - dynamodb:DeleteItem
           - dynamodb:GetItem
         Resource: !GetAtt TodosTable.Arn
+      - Effect: Allow
+        Action:
+          - s3:DeleteObject
+        Resource: arn:aws:s3:::${self:provider.environment.ATTACHMENT_S3_BUCKET}/*
 
   GenerateUploadUrl:
     handler: src/lambda/http/generateUploadUrl.handler
@@ -156,7 +160,7 @@ functions:
         Action:
           - s3:PutObject
           - s3:GetObject
-        Resource: !GetAtt TodosTable.Arn
+        Resource: arn:aws:s3:::${self:provider.environment.ATTACHMENT_S3_BUCKET}/*
 
 resources:
   Resources:
