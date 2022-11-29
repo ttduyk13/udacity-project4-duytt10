@@ -65,6 +65,26 @@ export class TodosAccess {
     await this.docClient.update(params).promise()
   }
 
+  updateTodoWithAttachment = async (
+      todoId: string,
+      userId: string,
+      attachmentUrl: string
+  ): Promise<void> => {
+    const params = {
+      TableName: this.todosTable,
+      Key: {
+        todoId,
+        userId
+      },
+      UpdateExpression: 'set attachmentUrl = :attachmentUrl',
+      ExpressionAttributeValues: {
+        ':attachmentUrl': attachmentUrl
+      }
+    }
+
+    await this.docClient.update(params).promise()
+  }
+
   deleteTodo = async (todoId: string, userId: string): Promise<void> => {
     const params = {
       TableName: this.todosTable,

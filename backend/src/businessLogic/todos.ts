@@ -66,6 +66,7 @@ const updateTodo = async (
 const deleteTodo = async (todoId: string, userId: string): Promise<void> => {
   try {
     await todosAccess.deleteTodo(todoId, userId)
+    await s3Storage.deleteAttachment(todoId, userId)
 
     logger.info(
       `todos # deleteTodo - delete success todo with todoId ${todoId} and userId ${userId}`
@@ -86,6 +87,9 @@ const createAttachmentPresignedUrl = async (
       `todos # createAttachmentPresignedUrl - generate presigned url: ${url}`,
 
     )
+
+    await todosAccess.updateTodoWithAttachment(todoId, userId, url);
+
     return url
   } catch (error) {
     logger.error('Error when generating presigned URL to upload file: ', error)
