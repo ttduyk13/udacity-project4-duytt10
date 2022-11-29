@@ -5,6 +5,8 @@
   "dependencies": {
     "@types/axios": "^0.14.0",
     "@types/http-errors": "^1.6.1",
+    "@types/express-serve-static-core": "4.17.20",
+    "auth0": "^2.44.0",
     "aws-xray-sdk": "^2.2.0",
     "axios": "^0.18.0",
     "http-errors": "^1.7.2",
@@ -15,19 +17,19 @@
     "winston": "^3.2.1"
   },
   "devDependencies": {
-    "@types/aws-lambda": "^8.10.17",
+    "@types/aws-lambda": "^8.10.109",
     "@types/jsonwebtoken": "^8.3.2",
     "@types/node": "^10.14.4",
-    "aws-sdk": "^2.433.0",
+    "aws-sdk": "^2.1262.0",
     "serverless-aws-documentation": "^1.1.0",
     "serverless-iam-roles-per-function": "^3.2.0-e97ab49",
     "serverless-plugin-canary-deployments": "^0.4.7",
     "serverless-plugin-tracing": "^2.0.0",
     "serverless-reqvalidator-plugin": "^1.0.3",
-    "serverless-webpack": "^5.2.0",
-    "ts-loader": "^5.3.3",
-    "typescript": ">=3.8.0",
-    "webpack": "^4.29.6"
+    "serverless-webpack": "^5.11.0",
+    "ts-loader": "^5.4.5",
+    "typescript": "^3.9.10",
+    "webpack": "^4.46.0"
   },
   "author": "Ivan Mushketyk",
   "license": "MIT"
