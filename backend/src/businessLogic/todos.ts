@@ -6,6 +6,7 @@ import { UpdateTodoRequest } from '../requests/UpdateTodoRequest'
 import { createLogger } from '../utils/logger'
 import * as uuid from 'uuid'
 import * as createError from 'http-errors'
+import {attachmentUrl} from "../utils/constants";
 
 const logger = createLogger('Todos')
 const todosAccess = new TodosAccess()
@@ -88,7 +89,7 @@ const createAttachmentPresignedUrl = async (
 
     )
 
-    await todosAccess.updateTodoWithAttachment(todoId, userId, url);
+    await todosAccess.updateTodoWithAttachment(todoId, userId, attachmentUrl(todoId, userId, s3Storage.getBucketName()));
 
     return url
   } catch (error) {

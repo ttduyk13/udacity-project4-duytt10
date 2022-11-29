@@ -12,10 +12,15 @@ export class S3Storage {
 
     private defaultUrlExpiration: number = 300
 
+    getBucketName = (): string => {
+        return this.bucketName
+    }
+
+
     getUploadUrl = (todoId: string, userId: string): string => {
         const params = {
             Bucket: this.bucketName,
-            Key: `${userId}-${todoId}`,
+            Key: `${userId}-${todoId}.png`,
             Expires: Number.isInteger(this.urlExpiration)
                 ? parseInt(this.urlExpiration)
                 : this.defaultUrlExpiration
@@ -27,7 +32,7 @@ export class S3Storage {
 
         const params = {
             Bucket: this.bucketName,
-            Key: `${userId}-${todoId}`,
+            Key: `${userId}-${todoId}.png`,
         }
 
         return this.s3.deleteObject(params).promise();
